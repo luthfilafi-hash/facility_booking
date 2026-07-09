@@ -1,58 +1,30 @@
-# CakePHP Application Skeleton
+# UniReserve Facility Booking System
 
-![Build Status](https://github.com/cakephp/app/actions/workflows/ci.yml/badge.svg?branch=5.x)
-[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app)
-[![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
+Welcome to the **UniReserve Facility Booking System**! This is a comprehensive web-based application designed to help students easily book university facilities, such as Badminton Courts, Basketball Courts, and more. It also provides a robust administrative dashboard for staff and admins to manage users, facilities, and maintenance reports.
 
-A skeleton for creating applications with [CakePHP](https://cakephp.org) 5.x.
+## Features
+- **Student Dashboard:** Easy-to-use interface for students to browse and book available facilities.
+- **Maintenance Reporting:** Students can seamlessly report issues with facilities (e.g., broken equipment), and track the status of their reports.
+- **Admin/Staff Dashboard:** Powerful backend for administrators to manage bookings, resolve maintenance reports, and oversee users.
+- **Responsive Design:** A beautiful, dark-themed, and mobile-friendly interface built with modern CSS and fluid typography.
+- **Audit Logs:** Secure tracking of administrative actions for accountability.
 
-The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
+## Installation & Setup
 
-## Installation
+1. **Clone the Repository**
+   Download or clone this repository to your local web server environment (e.g., Laragon, XAMPP).
+   
+2. **Database Setup**
+   - Create a new MySQL database named `facility_booking`.
+   - Import the provided `database.sql` file into this new database using phpMyAdmin or your preferred database tool.
 
-1. Download [Composer](https://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist cakephp/app [app_name]`.
+3. **Configuration**
+   Open `config.php` and ensure the database connection credentials (username, password, database name) match your local setup.
 
-If Composer is installed globally, run
+4. **Run the Application**
+   Navigate to the project folder in your web browser (e.g., `http://localhost/facility_booking`).
 
-```bash
-composer create-project --prefer-dist cakephp/app
-```
-
-In case you want to use a custom app dir name (e.g. `/myapp/`):
-
-```bash
-composer create-project --prefer-dist cakephp/app myapp
-```
-
-You can now either use your machine's webserver to view the default home page, or start
-up the built-in webserver with:
-
-```bash
-bin/cake server -p 8765
-```
-
-Then visit `http://localhost:8765` to see the welcome page.
-
-## Demo app
-
-Check out the [5.x-demo branch](https://github.com/cakephp/app/tree/5.x-demo), which contains demo migrations and a seeder.
-See the [README](https://github.com/cakephp/app/blob/5.x-demo/README.md) on how to get it running.
-
-## Update
-
-Since this skeleton is a starting point for your application and various files
-would have been modified as per your needs, there isn't a way to provide
-automated upgrades, so you have to do any updates manually.
-
-## Configuration
-
-Read and edit the environment specific `config/app_local.php` and set up the
-`'Datasources'` and any other configuration relevant for your application.
-Other environment agnostic settings can be changed in `config/app.php`.
-
-## Layout
-
-The app skeleton uses [Milligram](https://milligram.io/) (v1.3) minimalist CSS
-framework by default. You can, however, replace it with any other library or
-custom styles.
+## Tech Stack
+- **Frontend:** HTML5, CSS3, JavaScript
+- **Backend:** PHP (PDO)
+- **Database:** MySQL
