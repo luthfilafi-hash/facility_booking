@@ -1,0 +1,48 @@
+Array
+(
+    [action] => cancel
+    [type] => facility
+    [id] => 10
+)
+
+User ID: 7
+Array
+(
+    [action] => cancel
+    [type] => facility
+    [id] => 13
+)
+
+User ID: 8
+Array
+(
+    [action] => cancel
+    [type] => facility
+    [id] => 6
+)
+
+User ID: 8
+Array
+(
+    [action] => cancel
+    [type] => facility
+    [id] => 16
+)
+
+User ID: 7
+Array
+(
+    [action] => cancel
+    [type] => facility
+    [id] => 17
+)
+
+User ID: 7
+Array
+(
+    [action] => cancel
+    [type] => facility
+    [id] => 19
+)
+
+User ID: 13
