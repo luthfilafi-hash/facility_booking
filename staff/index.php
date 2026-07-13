@@ -2,6 +2,16 @@
 require_once __DIR__ . '/../includes/auth.php';
 requireRole('staff');
 
+// Handle Maintenance Quick Complete
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'complete_maintenance' && isset($_POST['maintenance_id'])) {
+    $mId = $_POST['maintenance_id'];
+    $stmt = $pdo->prepare("UPDATE maintenance SET status = 'completed', modified = NOW() WHERE id = ?");
+    $stmt->execute([$mId]);
+    setFlash('Maintenance marked as completed.');
+    header('Location: index.php');
+    exit;
+}
+
 $title = 'Staff Dashboard';
 $is_dash = true;
 require_once __DIR__ . '/../includes/header_dash.php';
@@ -11,6 +21,16 @@ $statPendingFacility = $pdo->query("SELECT COUNT(*) FROM bookings WHERE status='
 $statPendingEquipment = $pdo->query("SELECT COUNT(*) FROM equipment_bookings WHERE status='pending'")->fetchColumn();
 $statPendingBookings = $statPendingFacility + $statPendingEquipment;
 $statMaintenance = $pdo->query("SELECT COUNT(*) FROM maintenance WHERE status IN ('scheduled', 'in_progress')")->fetchColumn();
+
+// Check for overdue maintenance
+$overdueMaintenance = $pdo->query("
+    SELECT m.*, f.name as facility_name 
+    FROM maintenance m 
+    JOIN facilities f ON m.facility_id = f.id 
+    WHERE COALESCE(m.end_date, m.start_date) < CURDATE() 
+      AND m.status != 'completed'
+    LIMIT 1
+")->fetch();
 ?>
 
 <div class="sb-page-header">
@@ -94,4 +114,31 @@ $statMaintenance = $pdo->query("SELECT COUNT(*) FROM maintenance WHERE status IN
 </div>
 
 <?php require_once __DIR__ . '/../includes/charts.php'; ?>
+
+<?php if ($overdueMaintenance): ?>
+<div id="maintenanceModalOverlay" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.7); z-index:9999; display:flex; justify-content:center; align-items:center; backdrop-filter:blur(5px);">
+    <div class="sb-card sb-fade" style="width: 100%; max-width: 500px; margin: 1rem; border: 1px solid var(--border);">
+        <div class="sb-card-header" style="background: var(--card); border-bottom: 1px solid var(--border);">
+            <h3><?= render_icon('alert-triangle', '', 20) ?> Overdue Maintenance</h3>
+        </div>
+        <div class="sb-card-body" style="padding: 1.5rem;">
+            <p style="margin-bottom: 1rem;">The maintenance for <strong><?= htmlspecialchars($overdueMaintenance['facility_name']) ?></strong> is overdue.</p>
+            <p style="margin-bottom: 1.5rem; color: var(--muted-foreground); font-size: 0.9rem;">
+                Scheduled: <?= htmlspecialchars($overdueMaintenance['start_date']) ?> 
+                <?= $overdueMaintenance['end_date'] ? ' to ' . htmlspecialchars($overdueMaintenance['end_date']) : '' ?>
+            </p>
+            <div style="display:flex; flex-wrap: wrap; gap: 1rem;">
+                <form method="POST" style="margin:0;">
+                    <input type="hidden" name="action" value="complete_maintenance">
+                    <input type="hidden" name="maintenance_id" value="<?= $overdueMaintenance['id'] ?>">
+                    <button type="submit" class="sb-btn sb-btn-primary"><?= render_icon('check', '', 16) ?> Mark as Complete</button>
+                </form>
+                <a href="maintenance.php?action=edit&id=<?= $overdueMaintenance['id'] ?>" class="sb-btn sb-btn-outline"><?= render_icon('calendar', '', 16) ?> Change Date</a>
+                <button type="button" class="sb-btn sb-btn-ghost" onclick="document.getElementById('maintenanceModalOverlay').style.display='none'"><?= render_icon('x', '', 16) ?> Dismiss</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>
