@@ -1,17 +1,8 @@
 <?php
-$isStudent = (isset($user) && $user['role'] === 'student');
-
-if ($isStudent) {
-    $facStats = $pdo->query("SELECT f.name, COUNT(b.id) as count FROM bookings b JOIN facilities f ON f.id = b.facility_id WHERE b.user_id = {$user['id']} GROUP BY f.id")->fetchAll();
-    $eqStats = $pdo->query("SELECT e.name, IFNULL(SUM(be.quantity),0) as count FROM equipment_bookings be JOIN equipments e ON e.id = be.equipment_id WHERE be.user_id = {$user['id']} GROUP BY e.id")->fetchAll();
-    $timeStats = $pdo->query("SELECT DATE(created) as date, COUNT(*) as count FROM bookings WHERE user_id = {$user['id']} AND created >= DATE_SUB(NOW(), INTERVAL 30 DAY) GROUP BY DATE(created) ORDER BY date")->fetchAll();
-    $statusStats = $pdo->query("SELECT status, COUNT(*) as count FROM bookings WHERE user_id = {$user['id']} GROUP BY status")->fetchAll();
-} else {
-    $facStats = $pdo->query("SELECT f.name, COUNT(b.id) as count FROM facilities f LEFT JOIN bookings b ON f.id = b.facility_id GROUP BY f.id")->fetchAll();
-    $eqStats = $pdo->query("SELECT e.name, IFNULL(SUM(be.quantity),0) as count FROM equipments e LEFT JOIN equipment_bookings be ON e.id = be.equipment_id GROUP BY e.id")->fetchAll();
-    $timeStats = $pdo->query("SELECT DATE(created) as date, COUNT(*) as count FROM bookings WHERE created >= DATE_SUB(NOW(), INTERVAL 30 DAY) GROUP BY DATE(created) ORDER BY date")->fetchAll();
-    $statusStats = $pdo->query("SELECT status, COUNT(*) as count FROM bookings GROUP BY status")->fetchAll();
-}
+$facStats = $pdo->query("SELECT f.name, COUNT(b.id) as count FROM facilities f LEFT JOIN bookings b ON f.id = b.facility_id GROUP BY f.id")->fetchAll();
+$eqStats = $pdo->query("SELECT e.name, IFNULL(SUM(be.quantity),0) as count FROM equipments e LEFT JOIN equipment_bookings be ON e.id = be.equipment_id GROUP BY e.id")->fetchAll();
+$timeStats = $pdo->query("SELECT DATE(created) as date, COUNT(*) as count FROM bookings WHERE created >= DATE_SUB(NOW(), INTERVAL 30 DAY) GROUP BY DATE(created) ORDER BY date")->fetchAll();
+$statusStats = $pdo->query("SELECT status, COUNT(*) as count FROM bookings GROUP BY status")->fetchAll();
 
 if (empty($facStats)) {
     $facLabels = json_encode(['No Data']);
