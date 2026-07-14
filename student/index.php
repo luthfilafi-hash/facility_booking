@@ -143,6 +143,7 @@ $approvedBookings = $approvedFacility + $approvedEquipment;
                     <td><span class="sb-badge sb-badge-<?= htmlspecialchars($b['status']) ?>"><?= htmlspecialchars($b['status']) ?></span></td>
                     <td class="sb-actions">
                         <?php if ($b['status'] === 'pending'): ?>
+                        <a href="edit_booking.php?id=<?= $b['id'] ?>" class="sb-btn sb-btn-sm sb-btn-primary" title="Edit Booking"><?= render_icon('edit', '', 14) ?? 'Edit' ?></a>
                         <form method="POST" style="display:inline;" onsubmit="return confirm('Cancel this facility booking?');">
                             <input type="hidden" name="action" value="cancel"><input type="hidden" name="type" value="facility"><input type="hidden" name="id" value="<?= $b['id'] ?>">
                             <button type="submit" class="sb-btn sb-btn-sm sb-btn-danger" title="Cancel Booking"><?= render_icon('x', '', 14) ?></button>
